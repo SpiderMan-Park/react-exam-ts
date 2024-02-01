@@ -1,0 +1,18 @@
+.wrap {
+  height: calc(100vh - 150px);
+  background: pink;
+  display: flex;
+  .left {
+    background: yellow;
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .right {
+    background: blueviolet;
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+  }
+}
