@@ -26,7 +26,9 @@ type SubjectState = {
     active_two: CourseType | null,
     topic_two_list: TopicType[],
     active_topic: TopicType | null,
-    current_two_subject: string // 当前选择的考试科目
+    current_two_subject: string, // 当前选择的考试科目
+    exam_topic_list: []  // 考试题目列表
+    current_exam_topic_id: string
 }
 
 const initialState = {
@@ -35,7 +37,9 @@ const initialState = {
     active_two: null, // 二级分类信息
     topic_two_list: [],
     active_topic: null,
-    current_two_subject: ''
+    current_two_subject: '',
+    exam_topic_list: [],
+    current_exam_topic_id: ''
 } as SubjectState
 
 export const get_subject_tree_async = createAsyncThunk<CourseType[], void>(
@@ -54,6 +58,14 @@ export const get_topic_two_list: any = createAsyncThunk<TopicType[], string>(
     }
 )
 
+export const get_exam_async = createAsyncThunk<[], string>(
+    'get/exam_topic',
+    async (action, state) => {
+        const res: AxiosRes<ResType<[]>> = await axios.get(`/api/topic/${action}`)
+        return res.data.data
+    }
+)
+
 export const subjectSlice = createSlice({
     name: 'subject',
     initialState,
@@ -66,6 +78,16 @@ export const subjectSlice = createSlice({
         },
         set_current_two_subject: (state, action) => {
             state.current_two_subject = action.payload
+        },
+        set_current_exam_topic_id: (state, action) => {
+            state.current_exam_topic_id = action.payload
+        },
+        set_exam_answer: (state, action) => {
+            state.exam_topic_list.forEach((item: any) => {
+                if (item._id === action.payload._id) {
+                    item.answer = action.payload.answer
+                }
+            })
         }
     },
     extraReducers: (builder) => {
@@ -79,6 +101,10 @@ export const subjectSlice = createSlice({
             .addCase(get_topic_two_list.fulfilled, (state, res) => {
                 state.topic_two_list = res.payload
                 state.loading = false
+            })
+            .addCase(get_exam_async.fulfilled, (state, res: any) => {
+                state.exam_topic_list = res.payload
+                state.current_exam_topic_id = res.payload[0]._id
             })
     }
 })
@@ -95,7 +121,20 @@ export const select_subject_loading = (state: RootState) => { return state.subje
 export const select_active_topic = (state: RootState) => { return state.subject.active_topic }
 // 当前选择的考试科目
 export const select_current_two_subject = (state: RootState) => { return state.subject.current_two_subject }
-
-export const { set_active_two, set_subject_active_topic, set_current_two_subject } = subjectSlice.actions
+// 考题列表
+export const select_exam_topic_list = (state: RootState) => { return state.subject.exam_topic_list }
+// 当前选中的考题
+export const select_current_exam_topic = (state: RootState) => {
+    return state.subject.exam_topic_list.find((item: any) => {
+        return item._id === state.subject.current_exam_topic_id
+    }) || {}
+}
+export const {
+    set_active_two,
+    set_subject_active_topic,
+    set_current_two_subject,
+    set_current_exam_topic_id,
+    set_exam_answer
+} = subjectSlice.actions
 
 export default subjectSlice.reducer
