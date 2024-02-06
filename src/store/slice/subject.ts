@@ -7,7 +7,8 @@ export type CourseType = {
     disabled: boolean;
     title: string,
     value: string,
-    children: CourseType[]
+    children: CourseType[],
+    can_exam?: boolean
 }
 // 单个题目类型
 export type TopicType = {
@@ -24,7 +25,8 @@ type SubjectState = {
     subject_tree: CourseType[],
     active_two: CourseType | null,
     topic_two_list: TopicType[],
-    active_topic: TopicType | null
+    active_topic: TopicType | null,
+    current_two_subject: string // 当前选择的考试科目
 }
 
 const initialState = {
@@ -32,7 +34,8 @@ const initialState = {
     subject_tree: [], // 下拉框
     active_two: null, // 二级分类信息
     topic_two_list: [],
-    active_topic: null
+    active_topic: null,
+    current_two_subject: ''
 } as SubjectState
 
 export const get_subject_tree_async = createAsyncThunk<CourseType[], void>(
@@ -60,6 +63,9 @@ export const subjectSlice = createSlice({
         },
         set_subject_active_topic: (state, action) => {
             state.active_topic = action.payload
+        },
+        set_current_two_subject: (state, action) => {
+            state.current_two_subject = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -87,7 +93,9 @@ export const select_topic_two_list = (state: RootState) => { return state.subjec
 export const select_subject_loading = (state: RootState) => { return state.subject.loading }
 // 获取当前选择题目
 export const select_active_topic = (state: RootState) => { return state.subject.active_topic }
+// 当前选择的考试科目
+export const select_current_two_subject = (state: RootState) => { return state.subject.current_two_subject }
 
-export const { set_active_two, set_subject_active_topic } = subjectSlice.actions
+export const { set_active_two, set_subject_active_topic, set_current_two_subject } = subjectSlice.actions
 
 export default subjectSlice.reducer
