@@ -42,3 +42,12 @@ export const upload_imgs = function (files: any) {
         });
     })
 }
+
+export const getImgUrl = (url: string | undefined) => {
+    if (!url) return
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+        return url
+    } else {
+        return `//${url}`
+    }
+}

@@ -3,7 +3,7 @@ import { UploadChangeParam, UploadFile, UploadProps } from 'antd/es/upload'
 import { useEffect, useState } from 'react'
 import { upload_imgs } from '@/utils'
 import axios from '@/utils/http'
-import CustomUpload from './Upload'
+import CustomUpload from '@/common_components/Upload'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { get_topic_two_list, select_active_topic, select_active_two, set_active_two, set_subject_active_topic, TopicType } from '@/store/slice/subject'
 
@@ -52,7 +52,7 @@ export default function TopicDetail() {
         setFileList([])
     }
     async function submit(data: TopicType) {
-        
+
         setLoading(true)
         if (fileList.length) {
             // 需要上传的图片文件（如果没有则不用处理）

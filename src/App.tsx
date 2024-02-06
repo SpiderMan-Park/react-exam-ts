@@ -1,7 +1,11 @@
 import './App.scss';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Layout from './common_components/layout';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import Layout from '@/common_components/layout';
 import { routersData } from './config';
+import { useEffect } from 'react';
+import { useAppDispatch } from '@/store';
+import { get_user_info } from '@/store/slice/user';
+import EventBus from '@/utils/event'
 
 import Login from '@/pages/login';
 import PersonInfo from './pages/person_info';
@@ -17,12 +21,22 @@ import SubjectAdd from './pages/subject_add';
 import AdminManage from './pages/admin_manage';
 
 function App() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    dispatch(get_user_info())
+    EventBus.on("global_not_login", function (msg) {
+      navigate('/login')
+    })
+  }, [])
+
   return (
     <Routes>
+      <Route path='/' element={<Navigate to={'/login'}></Navigate>} />
+      {/* Page 01：登录 */}
+      <Route path={routersData.login.path} element={<Login />}></Route>
       <Route element={<Layout />}>
-        <Route path='/' element={<Navigate to={'/login'}></Navigate>} />
-        {/* Page 01：登录 */}
-        <Route path={routersData.login.path} element={<Login />} />
         {/* Page 02：个人信息录入（学生 管理员） */}
         <Route path={routersData.person_info.path} element={<PersonInfo />} />
         {/* Page 03：考题选择（学生） */}

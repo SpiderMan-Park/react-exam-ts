@@ -16,7 +16,7 @@ function useIsShowMenu() {
         return item.key === key
     }) as MenuData
 
-    if (menu.hasMenu) {
+    if (menu?.hasMenu) {
         return true
     } else {
         return false

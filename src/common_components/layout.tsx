@@ -1,9 +1,9 @@
 import useIsShowHeader from "@/hooks/useIsShowHeader"
 import useIsShowMenu from "@/hooks/useIsShowMenu"
 import { Outlet } from "react-router-dom"
-import Header from "./header"
+import Header from "./header/index"
 import Menu from "./menu"
-import { useAppDispatch, useAppSelector } from '@/store'
+import { useAppDispatch } from '@/store'
 import { useEffect } from "react"
 import { get_menu_async } from "@/store/slice/user"
 
