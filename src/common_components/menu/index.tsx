@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
-import { type RouterKeys, routersData, superAdminMenus } from '@/config';
 import { useNavigate } from 'react-router-dom';
 import usePathKey from '@/hooks/usePathKey';
+import { useAppSelector } from '@/store'
+import { select_menu, MenuData } from '@/store/slice/user';
 
 const App: React.FC = () => {
     const [current, setCurrent] = useState('');
     const navigate = useNavigate()
     const path_key = usePathKey()
-    const menus = superAdminMenus
+    const menus = useAppSelector(select_menu)
 
     useEffect(() => {
         if (path_key) {
@@ -19,7 +20,10 @@ const App: React.FC = () => {
 
     const onClick: MenuProps['onClick'] = (e) => {
         setCurrent(e.key)
-        navigate(routersData[e.key as RouterKeys].path)
+        const path = menus.find((item: MenuData) => {
+            return item.key === e.key
+        })?.path as string
+        navigate(path)
     };
 
     return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={menus} />;

@@ -19,4 +19,6 @@ export type ResType<T = any> = {
     data: T
 }
 
+export type AxiosResData<T = any> = AxiosRes<ResType<T>>
+
 export default instance
