@@ -15,10 +15,14 @@ function Header() {
         await axios.post('/api/user/logout')
         navigate('/login')
     }
-
+    function logo_click() {
+        if (userInfo.role === 'student') {
+            navigate('/exam_history')
+        }
+    }
     return (
         <div className={styles.wrap}>
-            <div className="logo" onClick={() => { }}>
+            <div className="logo" onClick={logo_click}>
                 <img src={logo} alt="九剑考试测评系统" />
                 <h1 style={{ fontSize: 0 }}>九剑考试测评系统</h1>
             </div>

@@ -53,15 +53,17 @@ function ExamHistory() {
         render: (row: any) => {
             return <Tag onClick={() => {
                 read_exam_click(row)
-            }} style={{ fontSize: "12px", color: "#1880FF", borderRadius: "12px", opacity: row.status ? '1' : '0.2', background: "#F2F4F7", cursor: row.status ? "pointer" : "none" }}>查看</Tag>
+            }} style={{ fontSize: "12px", color: "#1880FF", borderRadius: "12px", opacity: row.is_judge ? '1' : '0.2', background: "#F2F4F7", cursor: row.is_judge ? "pointer" : "none" }}>查看</Tag>
         },
     }]
 
-    return <div className={styles["exam-history"]}>
-        <div className='table-list-wrapper'>
-            <Table dataSource={exam_list} columns={tableColumns} pagination={false} />
+    return (
+        <div className={styles["exam-history"]}>
+            <div className='table-list-wrapper'>
+                <Table rowKey={'_id'} dataSource={exam_list} columns={tableColumns} pagination={false} />
+            </div>
         </div>
-    </div>;
+    )
 }
 
 export default ExamHistory

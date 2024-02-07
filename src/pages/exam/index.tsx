@@ -8,7 +8,9 @@ import { get_exam_async, select_current_exam_topic, select_exam_topic_list, set_
 
 function Exam() {
     const dispatch = useAppDispatch()
+    // 题目列表
     const topic_list: any[] = useAppSelector(select_exam_topic_list)
+    // 当前选中的题目id
     const current_exam_topic: any = useAppSelector(select_current_exam_topic)
     const params: any = useParams()
     const [answer, set_answer] = useState('')

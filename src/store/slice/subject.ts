@@ -29,7 +29,8 @@ type SubjectState = {
     current_two_subject: string, // 当前选择的考试科目
     exam_topic_list: []  // 考试题目列表
     current_exam_topic_id: string,
-    exam_list: []   // 考试历史记录
+    exam_list: [],   // 考试历史记录
+    corret_exam_list: []  // 批改试卷 题目列表
 }
 
 const initialState = {
@@ -41,9 +42,11 @@ const initialState = {
     current_two_subject: '',
     exam_topic_list: [],
     current_exam_topic_id: '',
-    exam_list: []
+    exam_list: [],
+    corret_exam_list: []
 } as SubjectState
 
+// 获取课程树形数据
 export const get_subject_tree_async = createAsyncThunk<CourseType[], void>(
     'get/subject_tree',
     async (action, state) => {
@@ -52,6 +55,7 @@ export const get_subject_tree_async = createAsyncThunk<CourseType[], void>(
     }
 )
 
+// 获取题目列表
 export const get_topic_two_list: any = createAsyncThunk<TopicType[], string>(
     'get/topic_two_list',
     async (action, state) => {
@@ -60,14 +64,16 @@ export const get_topic_two_list: any = createAsyncThunk<TopicType[], string>(
     }
 )
 
+// 获取考试题目
 export const get_exam_async = createAsyncThunk<[], string>(
     'get/exam_topic',
     async (action, state) => {
         const res: AxiosRes<ResType<[]>> = await axios.get(`/api/topic/${action}`)
         return res.data.data
     }
-)  
+)
 
+// 获取考试记录
 export const get_exam_history = createAsyncThunk<ResType, any>(
     'get/exam_history',
     async (action, state) => {
@@ -75,6 +81,16 @@ export const get_exam_history = createAsyncThunk<ResType, any>(
         return res.data.data
     }
 )
+
+// 查看试卷
+export const get_corret_exam_async = createAsyncThunk<[], string>(
+    'get/get_corret_exam_async',
+    async (action, state) => {
+        const res: AxiosRes<ResType<[]>> = await axios.get(`/api/exam/${action}`)
+        return res.data.data
+    }
+)
+
 export const subjectSlice = createSlice({
     name: 'subject',
     initialState,
@@ -97,7 +113,19 @@ export const subjectSlice = createSlice({
                     item.answer = action.payload.answer
                 }
             })
-        }
+        },
+        set_exam_topic_list: (state, action) => {
+            state.exam_topic_list = action.payload
+        },
+        set_exam_corret: (state, action) => {
+            state.exam_topic_list.forEach((item: any) => {
+                if (item._id === action.payload._id) {
+                    item.is_corret = action.payload.is_corret
+                    item.pass = action.payload.pass
+                    item.comment = action.payload.comment
+                }
+            })
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -117,6 +145,10 @@ export const subjectSlice = createSlice({
             })
             .addCase(get_exam_history.fulfilled, (state, res: any) => {
                 state.exam_list = res.payload
+            })
+            .addCase(get_corret_exam_async.fulfilled, (state, res: any) => {
+                state.exam_topic_list = res.payload.topic_list
+                state.current_exam_topic_id = res.payload.topic_list[0]._id
             })
     }
 })
@@ -149,7 +181,9 @@ export const {
     set_subject_active_topic,
     set_current_two_subject,
     set_current_exam_topic_id,
-    set_exam_answer
+    set_exam_answer,
+    set_exam_corret,
+    set_exam_topic_list
 } = subjectSlice.actions
 
 export default subjectSlice.reducer
