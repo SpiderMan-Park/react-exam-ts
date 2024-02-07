@@ -28,7 +28,8 @@ type SubjectState = {
     active_topic: TopicType | null,
     current_two_subject: string, // 当前选择的考试科目
     exam_topic_list: []  // 考试题目列表
-    current_exam_topic_id: string
+    current_exam_topic_id: string,
+    exam_list: []   // 考试历史记录
 }
 
 const initialState = {
@@ -39,7 +40,8 @@ const initialState = {
     active_topic: null,
     current_two_subject: '',
     exam_topic_list: [],
-    current_exam_topic_id: ''
+    current_exam_topic_id: '',
+    exam_list: []
 } as SubjectState
 
 export const get_subject_tree_async = createAsyncThunk<CourseType[], void>(
@@ -64,8 +66,15 @@ export const get_exam_async = createAsyncThunk<[], string>(
         const res: AxiosRes<ResType<[]>> = await axios.get(`/api/topic/${action}`)
         return res.data.data
     }
-)
+)  
 
+export const get_exam_history = createAsyncThunk<ResType, any>(
+    'get/exam_history',
+    async (action, state) => {
+        const res = await axios.post(`/api/exam`, action)
+        return res.data.data
+    }
+)
 export const subjectSlice = createSlice({
     name: 'subject',
     initialState,
@@ -106,6 +115,9 @@ export const subjectSlice = createSlice({
                 state.exam_topic_list = res.payload
                 state.current_exam_topic_id = res.payload[0]._id
             })
+            .addCase(get_exam_history.fulfilled, (state, res: any) => {
+                state.exam_list = res.payload
+            })
     }
 })
 
@@ -129,6 +141,9 @@ export const select_current_exam_topic = (state: RootState) => {
         return item._id === state.subject.current_exam_topic_id
     }) || {}
 }
+// 考试历史记录
+export const select_exam_list = (state: RootState) => { return state.subject.exam_list }
+
 export const {
     set_active_two,
     set_subject_active_topic,

@@ -46,7 +46,7 @@ function Exam() {
         }))
     }
     async function submit_click() {
-        await axios.post('/api/exam', {
+        await axios.post('/api/exam/create', {
             topic_list,
             two_id: params.exam_id
         })
