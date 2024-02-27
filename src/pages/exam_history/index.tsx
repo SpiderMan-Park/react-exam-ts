@@ -16,8 +16,10 @@ function ExamHistory() {
     }, [])
     function read_exam_click(item: any) {
         console.log('item', item)
-        const exam_id = item._id
-        navigate(`/read_exam/${exam_id}`)
+        if (item.is_judge) {
+            const exam_id = item._id
+            navigate(`/read_exam/${exam_id}`)
+        }
     }
     const tableColumns = [{
         title: '试卷名称',
@@ -28,7 +30,7 @@ function ExamHistory() {
         dataIndex: 'created',
         key: '_id',
     }, {
-        title: '是否通过',
+        title: '是否阅卷',
         dataIndex: 'is_judge',
         key: '_id',
         render: (status: boolean) => {
