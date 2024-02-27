@@ -148,6 +148,7 @@ export const subjectSlice = createSlice({
             })
             .addCase(get_corret_exam_async.fulfilled, (state, res: any) => {
                 state.exam_topic_list = res.payload.topic_list
+                // 这个逻辑对于阅读试卷是多余的
                 state.current_exam_topic_id = res.payload.topic_list[0]._id
             })
     }

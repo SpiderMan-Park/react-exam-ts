@@ -14,7 +14,7 @@ function CorretExam() {
     const params = useParams()
     // 题目列表
     const topic_list: any[] = useAppSelector(select_exam_topic_list)
-    // 当前选中的题目id
+    // 当前选中的题目对象
     const current_exam_topic: any = useAppSelector(select_current_exam_topic)
     useEffect(() => {
         let flag = false
@@ -55,6 +55,7 @@ function CorretExam() {
         await axios.patch(`/api/exam/${params.exam_id}`, {
             topic_list,
         })
+        navigate('/exam_history')
     }
 
     function textarea_change(e: any) {
@@ -135,7 +136,7 @@ function CorretExam() {
                             我的批阅
                         </div>
                         <Input.TextArea
-                            value={corret}
+                            value={corret || current_exam_topic.comment}
                             rows={4}
                             placeholder="请作答"
                             className={styles.customInput}

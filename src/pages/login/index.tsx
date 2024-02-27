@@ -54,6 +54,9 @@ const LoginPage: React.FC = () => {
             if (user_info.role === 'student') {
                 navigate('/exam_select')
             }
+            if(user_info.role === 'admin') {
+				navigate('/corret_exam_list')
+			}
         }
     }
 
