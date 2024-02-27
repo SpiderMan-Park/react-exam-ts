@@ -5,7 +5,14 @@ import { upload_imgs } from '@/utils'
 import axios from '@/utils/http'
 import CustomUpload from '@/common_components/Upload'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { get_topic_two_list, select_active_topic, select_active_two, set_active_two, set_subject_active_topic, TopicType } from '@/store/slice/subject'
+import {
+    get_topic_two_list,
+    select_active_topic,
+    select_active_two,
+    set_subject_active_two,
+    set_subject_active_topic
+} from '@/store/slice/subject'
+
 
 export default function TopicDetail() {
     const dispatch = useAppDispatch()
@@ -20,7 +27,7 @@ export default function TopicDetail() {
     // 组件卸载时把当前选择的数据删除
     useEffect(() => {
         return () => {
-            dispatch(set_active_two(null))
+            dispatch(set_subject_active_two(null))
             dispatch(set_subject_active_topic(null))
         }
     }, [])
@@ -51,9 +58,9 @@ export default function TopicDetail() {
         form.resetFields()
         setFileList([])
     }
-    async function submit(data: TopicType) {
-
+    const submit = async (data: any) => {
         setLoading(true)
+
         if (fileList.length) {
             // 需要上传的图片文件（如果没有则不用处理）
             const needUploadImgs = fileList.filter((file) => !file.url)
@@ -97,17 +104,17 @@ export default function TopicDetail() {
             scrollToFirstError
             onFinish={submit}
         >
-            <Form.Item<TopicType>
+            <Form.Item
                 label="题干"
                 name="title"
                 rules={[{ required: true, message: '题干必填' }]}
             >
                 <Input />
             </Form.Item>
-            <Form.Item<TopicType> label="描述" name="dec">
+            <Form.Item label="描述" name="dec">
                 <Input.TextArea />
             </Form.Item>
-            <Form.Item<TopicType> label="图片" name="img">
+            <Form.Item label="图片" name="img">
                 <CustomUpload
                     fileList={fileList}
                     uploadProps={{

@@ -19,15 +19,40 @@ import StudentManage from './pages/student_manage';
 import SubjectManage from './pages/subject_manage';
 import SubjectAdd from './pages/subject_add';
 import AdminManage from './pages/admin_manage';
+import { notification } from 'antd';
+import { logoutRequest } from './utils/request';
+
+const openNotification = (msg: string) => {
+  notification.error({
+    message: '发生错误',
+    description: `错误信息： ${msg}`
+  });
+};
 
 function App() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
+    // 通用的配置  或者 用户信息等待接口   建议放在根组件
     dispatch(get_user_info())
+
     EventBus.on("global_not_login", function (msg) {
       navigate('/login')
+    })
+
+    // 业务错误
+    EventBus.on("global_error_tips", function (msg) {
+      openNotification(msg)
+    })
+
+    // 没有权限的处理
+    EventBus.on("global_error_auth", function (msg) {
+      openNotification(msg)
+
+      logoutRequest().then(() => {
+        navigate('/login')
+      })
     })
   }, [])
 

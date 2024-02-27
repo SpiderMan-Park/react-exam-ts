@@ -1,77 +1,58 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { AxiosResData } from '@/utils/http'
-import axios from '@/utils/http'
 import { RootState } from '../index'
+import {
+    getUserInfoRequest,
+    UserInfo,
+    getMenuRequest,
+    getStudentListRequest,
+    getAdminListRequest,
+    MenuData
+} from '@/utils/request';
 
-export type MenuData = {
-    hasMenu: boolean,
-    key: string,
-    label: string,
-    path: string
-}
-
-export type UserData = {
-    name: string,
-    vChat: string,
-    phone: string,
-    avatar: string,
-    graduation_time: string,
-    money: number,
-    role: string,
-    has_person_info: boolean,
-    deu: string,
-    techStack: string,
-    topic_role: [],
-    _id: string
-}
 
 type Data = {
-    menu: MenuData[],
-    user_info: Partial<UserData>,
-    student_list: UserData[]
+    menu: MenuData[]
+    user_info: UserInfo
+    student_list: UserInfo[]
     is_show_user_edit_modal: boolean
-    current_edit_userinfo: UserData,
-    admin_list: UserData[]
+    current_edit_userinfo: UserInfo
+    admin_list: UserInfo[]
 }
 
 const initialState: Data = {
     menu: [],
-    user_info: {},
+    user_info: {} as UserInfo,
     student_list: [],
     is_show_user_edit_modal: false,
-    current_edit_userinfo: {} as UserData,
+    current_edit_userinfo: {} as UserInfo,
     admin_list: []
 }
 
 export const get_menu_async = createAsyncThunk<MenuData[]>(
     'get/user_menu',
     async (action, state) => {
-        const res: AxiosResData<MenuData[]> = await axios.get('/api/user/menu')
-        return res.data.data
+        return await getMenuRequest()
     }
 )
 
-export const get_user_info = createAsyncThunk<UserData>(
+export const get_user_info = createAsyncThunk<UserInfo>(
     'get/user_info',
     async (action, state) => {
-        const res: AxiosResData<UserData> = await axios.get('/api/user')
-        return res.data.data
+        return await getUserInfoRequest()
     }
 )
 
 export const get_student_async = createAsyncThunk<any>(
     'get/user_student',
     async (action, state) => {
-        const res: AxiosResData<[]> = await axios.get('/api/user/student')
-        return res.data.data
+        return await getStudentListRequest()
     }
 )
 
 export const get_admin_async = createAsyncThunk<any>(
     'get/user_admin',
     async (action, state) => {
-        const res: AxiosResData<[]> = await axios.get('/api/user/admin')
-        return res.data.data
+        return await getAdminListRequest()
     }
 )
 

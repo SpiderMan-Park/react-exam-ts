@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Modal } from 'antd';
 import { useAppSelector } from '@/store/index';
 import { select_is_show_user_edit_modal, set_is_show_user_edit_modal, select_current_edit_userinfo, set_edit_user_topic_role, get_student_async } from '@/store/slice/user';
 import { useAppDispatch } from '@/store';
 import { select_subject_tree } from '@/store/slice/subject';
 import { Checkbox } from 'antd';
-import axios from '@/utils/http'
+import { userInfoPatch, SubjectData } from '@/utils/request';
 
 function EditModal() {
     const dispatch = useAppDispatch()
     const is_show = useAppSelector(select_is_show_user_edit_modal)
 
-    const subject_tree = useAppSelector(select_subject_tree)
+    const subject_tree: SubjectData[] = useAppSelector(select_subject_tree)
     const edit_userinfo = useAppSelector(select_current_edit_userinfo)
 
+    // 对课程列表树状结构处理，目的： antd的表单能够认识
     let checkbox_options: any = []
     subject_tree.forEach((item) => {
         item.children.forEach((child_item) => {
@@ -25,7 +25,7 @@ function EditModal() {
     })
 
     async function handleOk() {
-        await axios.patch(`/api/user/${edit_userinfo._id}`, {
+        await userInfoPatch(edit_userinfo._id, {
             topic_role: edit_userinfo.topic_role
         })
         dispatch(set_is_show_user_edit_modal(false))
@@ -36,7 +36,7 @@ function EditModal() {
     }
 
     function onChange(value: any) {
-        
+
         dispatch(set_edit_user_topic_role(value))
     }
 

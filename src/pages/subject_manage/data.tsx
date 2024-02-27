@@ -1,6 +1,5 @@
-import { Modal, message } from "antd";
-import axios from "@/utils/http";
-import { MESSAGE_DELETE_EERROR } from "./constant";
+import { Modal } from "antd";
+import { subject2Delete } from '@/utils/request';
 
 /** 课程 */
 export interface Course {
@@ -52,11 +51,8 @@ export function handleDelete(
         title: "系统提醒！",
         onOk() {
             // [x] 课程删除 请求
-            axios.delete("/api/subject/two/" + id).then((res) => {
-                if (res.data.code === 0) {
-                    message.success(MESSAGE_DELETE_EERROR);
-                    cb && cb();
-                }
+            subject2Delete(id).then((res) => {
+                cb && cb();
             });
         },
         okText: "确定",

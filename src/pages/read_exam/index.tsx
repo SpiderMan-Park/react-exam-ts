@@ -1,19 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styles from "./index.module.scss";
-import { Alert, Button, Input, Empty, Divider, Space, Tag } from 'antd';
-import { useParams, useNavigate } from "react-router-dom";
+import { Tag } from 'antd';
+import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from '@/store';
-import axios from '@/utils/http';
-import { get_corret_exam_async, select_exam_topic_list } from "@/store/slice/subject";
+import { get_corret_exam_async, select_exam_topic_list, set_exam_topic_list } from "@/store/slice/subject";
 
 function ReadExam() {
     const dispatch = useAppDispatch()
-    const navigate = useNavigate()
     const params = useParams()
     const topic_list: any[] = useAppSelector(select_exam_topic_list)
     useEffect(() => {
         const exam_id: any = params.exam_id
         dispatch(get_corret_exam_async(exam_id))
+
+        return () => {
+            dispatch(set_exam_topic_list([]))
+        }
     }, [])
     return (
         <div>

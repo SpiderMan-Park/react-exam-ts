@@ -1,13 +1,11 @@
-import React, { useEffect, } from 'react';
-//import components
-import { Table, Divider, Form, Input, Button } from 'antd';
+import { useEffect, } from 'react';
+import { Table, Form, Input, Button } from 'antd';
 import { useAppDispatch } from '@/store'
 import styles from './index.module.scss'
 import { useSelector } from 'react-redux';
-import { get_subject_tree_async } from '@/store/slice/subject';
-import axios from 'axios';
 import { get_admin_async, select_user_admin_list } from '@/store/slice/user';
 import { useState } from 'react';
+import { addAdminRequest } from '@/utils/request';
 
 function AdminManage() {
     const [form] = Form.useForm();
@@ -64,7 +62,7 @@ function AdminManage() {
         if (!phone) {
             return
         }
-        await axios.post('/api/user/add_admin', {
+        await addAdminRequest({
             phone
         })
 

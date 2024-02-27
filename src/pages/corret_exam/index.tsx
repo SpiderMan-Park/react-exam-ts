@@ -3,8 +3,14 @@ import styles from "./index.module.scss";
 import { Button, Divider, Input } from 'antd';
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from '@/store';
-import { select_exam_topic_list, set_current_exam_topic_id, select_current_exam_topic, get_corret_exam_async, set_exam_corret } from '../../store/slice/subject';
-import axios from '@/utils/http';
+import {
+    select_exam_topic_list,
+    set_current_exam_topic_id,
+    select_current_exam_topic,
+    get_corret_exam_async,
+    set_exam_corret
+} from '@/store/slice/subject';
+import { corretExamPost } from '@/utils/request';
 
 function CorretExam() {
     const dispatch = useAppDispatch()
@@ -52,8 +58,8 @@ function CorretExam() {
         set_corret('')
     }
     async function submit_click() {
-        await axios.patch(`/api/exam/${params.exam_id}`, {
-            topic_list,
+        await corretExamPost(params.exam_id as string, {
+            topic_list
         })
         navigate('/exam_history')
     }

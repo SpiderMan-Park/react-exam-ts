@@ -1,93 +1,88 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios, { AxiosRes, ResType } from '@/utils/http'
 import { RootState } from '../index';
-
-// 单个课程类型
-export type CourseType = {
-    disabled: boolean;
-    title: string,
-    value: string,
-    children: CourseType[],
-    can_exam?: boolean
-}
-// 单个题目类型
-export type TopicType = {
-    dec: string,
-    title: string,
-    two_id: string,
-    _id: string
-    img: string[]
-}
+import {
+    getSubjectTree,
+    getTopic2List,
+    SubjectData,
+    TopicData,
+    getExamHistory,
+    ExamData,
+    getExamByIdRequest,
+    ResData
+} from '@/utils/request';
 
 // 题库仓库state类型
 type SubjectState = {
-    loading: boolean,
-    subject_tree: CourseType[],
-    active_two: CourseType | null,
-    topic_two_list: TopicType[],
-    active_topic: TopicType | null,
-    current_two_subject: string, // 当前选择的考试科目
-    exam_topic_list: []  // 考试题目列表
-    current_exam_topic_id: string,
-    exam_list: [],   // 考试历史记录
-    corret_exam_list: []  // 批改试卷 题目列表
+    loading: boolean
+    // 课程树形数据
+    subject_tree: SubjectData[]
+    // 当前选择课程
+    active_two: SubjectData
+    // 题目列表
+    topic_two_list: TopicData[]
+    // 当前选择题目
+    active_topic: TopicData
+    // 当前选择的考试科目
+    current_two_subject: string
+    // 考试题目列表
+    exam_topic_list: []
+    current_exam_topic_id: string
+    // 考试历史记录
+    exam_list: [],
+    corret_exam_list_loading: boolean
 }
 
 const initialState = {
     loading: false,
     subject_tree: [], // 下拉框
-    active_two: null, // 二级分类信息
+    active_two: {} as SubjectData, // 二级分类信息
     topic_two_list: [],
-    active_topic: null,
+    active_topic: {} as TopicData,
     current_two_subject: '',
     exam_topic_list: [],
     current_exam_topic_id: '',
     exam_list: [],
-    corret_exam_list: []
+    corret_exam_list: [],
+    corret_exam_list_loading: false
 } as SubjectState
 
 // 获取课程树形数据
-export const get_subject_tree_async = createAsyncThunk<CourseType[], void>(
+export const get_subject_tree_async = createAsyncThunk<SubjectData[], void>(
     'get/subject_tree',
     async (action, state) => {
-        const res: AxiosRes<ResType<CourseType[]>> = await axios.get('/api/subject')
-        return res.data.data
+        return await getSubjectTree()
     }
 )
 
 // 获取题目列表
-export const get_topic_two_list: any = createAsyncThunk<TopicType[], string>(
+export const get_topic_two_list: any = createAsyncThunk<TopicData[], string>(
     'get/topic_two_list',
     async (action, state) => {
-        const res: AxiosRes<ResType<TopicType[]>> = await axios.get(`/api/topic/${action}`)
-        return res.data.data;
+        return await getTopic2List(action)
     }
 )
 
 // 获取考试题目
-export const get_exam_async = createAsyncThunk<[], string>(
+export const get_exam_async = createAsyncThunk<TopicData[], string>(
     'get/exam_topic',
     async (action, state) => {
-        const res: AxiosRes<ResType<[]>> = await axios.get(`/api/topic/${action}`)
-        return res.data.data
+        return await getTopic2List(action)
     }
 )
 
 // 获取考试记录
-export const get_exam_history = createAsyncThunk<ResType, any>(
+export const get_exam_history = createAsyncThunk<ResData, any>(
     'get/exam_history',
     async (action, state) => {
-        const res = await axios.post(`/api/exam`, action)
-        return res.data.data
+        return await getExamHistory(action)
     }
 )
 
 // 查看试卷
-export const get_corret_exam_async = createAsyncThunk<[], string>(
+export const get_corret_exam_async = createAsyncThunk<ExamData, string>(
     'get/get_corret_exam_async',
     async (action, state) => {
-        const res: AxiosRes<ResType<[]>> = await axios.get(`/api/exam/${action}`)
-        return res.data.data
+        return await getExamByIdRequest(action)
     }
 )
 
@@ -95,7 +90,7 @@ export const subjectSlice = createSlice({
     name: 'subject',
     initialState,
     reducers: {
-        set_active_two: (state, action) => {
+        set_subject_active_two: (state, action) => {
             state.active_two = action.payload
         },
         set_subject_active_topic: (state, action) => {
@@ -143,8 +138,12 @@ export const subjectSlice = createSlice({
                 state.exam_topic_list = res.payload
                 state.current_exam_topic_id = res.payload[0]._id
             })
+            .addCase(get_exam_history.pending, (state, res: any) => {
+                state.corret_exam_list_loading = true
+            })
             .addCase(get_exam_history.fulfilled, (state, res: any) => {
                 state.exam_list = res.payload
+                state.corret_exam_list_loading = false
             })
             .addCase(get_corret_exam_async.fulfilled, (state, res: any) => {
                 state.exam_topic_list = res.payload.topic_list
@@ -177,8 +176,11 @@ export const select_current_exam_topic = (state: RootState) => {
 // 考试历史记录
 export const select_exam_list = (state: RootState) => { return state.subject.exam_list }
 
+export const select_corret_exam_list_loading = (state: RootState) => {
+    return state.subject.corret_exam_list_loading
+}
 export const {
-    set_active_two,
+    set_subject_active_two,
     set_subject_active_topic,
     set_current_two_subject,
     set_current_exam_topic_id,

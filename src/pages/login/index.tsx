@@ -5,10 +5,10 @@ import login_desc from './assets/login_desc.png'
 import login_logo from './assets/login_logo.png'
 import login_title_cn from './assets/login_title_cn.png'
 import login_title_en from './assets/login_title_en.png'
-import axios, { AxiosResData } from '@/utils/http'
 import { useNavigate } from 'react-router'
-import { set_user_info, UserData } from '@/store/slice/user'
+import { set_user_info } from '@/store/slice/user';
 import { useAppDispatch } from '@/store'
+import { loginPost, LoginBody } from '@/utils/request';
 
 const COUNT = 60
 
@@ -44,9 +44,8 @@ const LoginPage: React.FC = () => {
         console.log('Failed:', errorInfo)
     }
 
-    const onLogin = async (value: any) => {
-        const res: AxiosResData<UserData> = await axios.post('/api/user/login', value)
-        const user_info = res.data.data
+    const onLogin = async (value: LoginBody) => {
+        const user_info = await loginPost(value)
         dispatch(set_user_info(user_info))
         if (!user_info.has_person_info) {
             navigate('/person_info')
@@ -89,14 +88,14 @@ const LoginPage: React.FC = () => {
                     <div className={style.right_form}>
                         <Form onFinish={onLogin} size="large" labelCol={{ span: 5 }} wrapperCol={{ span: 20 }} labelAlign="left" onFinishFailed={onFinishFailed} form={form}>
                             <Form.Item
-                                label="手机号"
+                                label="用户名"
                                 name="phone"
                                 rules={[
                                     { required: true, message: '请填写手机号' },
                                     { pattern: new RegExp(/^1(3|4|5|6|7|8|9)\d{9}$/, 'g'), message: '请输入正确的手机号' },
                                 ]}
                             >
-                                <Input placeholder="请输入手机号" />
+                                <Input placeholder="请输入" />
                             </Form.Item>
                             <div style={{ position: 'relative' }}>
                                 <Form.Item label="验证码" name="code" rules={[{ required: true, message: '请输入验证码' }]}>

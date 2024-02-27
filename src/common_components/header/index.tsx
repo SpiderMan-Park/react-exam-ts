@@ -7,12 +7,13 @@ import { select_user_info } from '@/store/slice/user'
 import { useAppSelector } from '@/store'
 import { useNavigate } from 'react-router-dom'
 import { Avatar, Badge, Typography, Dropdown, List, Popover, Button } from 'antd'
+import { logoutRequest } from '@/utils/request';
 
 function Header() {
     const navigate = useNavigate()
     const userInfo = useAppSelector(select_user_info)
     async function logout() {
-        await axios.post('/api/user/logout')
+        await logoutRequest()
         navigate('/login')
     }
     function logo_click() {

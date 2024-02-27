@@ -1,10 +1,16 @@
 import styles from './index.module.scss'
 import { useEffect, useState } from "react";
-import { Alert, Button, Divider, Input, Empty, message } from 'antd';
-import { useNavigate, useParams } from "react-router-dom";
-import axios from '@/utils/http'
+import { Button, Divider, Input, message } from 'antd';
+import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from '@/store';
-import { get_exam_async, select_current_exam_topic, select_exam_topic_list, set_current_exam_topic_id, set_exam_answer } from '@/store/slice/subject';
+import {
+    get_exam_async,
+    select_current_exam_topic,
+    select_exam_topic_list,
+    set_current_exam_topic_id,
+    set_exam_answer
+} from '@/store/slice/subject';
+import { examPost } from '@/utils/request';
 
 function Exam() {
     const dispatch = useAppDispatch()
@@ -48,7 +54,7 @@ function Exam() {
         }))
     }
     async function submit_click() {
-        await axios.post('/api/exam/create', {
+        await examPost({
             topic_list,
             two_id: params.exam_id
         })

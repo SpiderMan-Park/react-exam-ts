@@ -2,15 +2,24 @@ import styles from './index.module.scss'
 import './index.scss'
 import { TreeSelect, Button, Tag } from 'antd';
 import { ReactNode, useEffect } from 'react';
-import { CourseType, get_subject_tree_async, get_topic_two_list, select_active_topic, select_active_two, select_subject_tree, set_active_two, set_subject_active_topic } from '@/store/slice/subject';
+import {
+    get_subject_tree_async,
+    get_topic_two_list,
+    select_active_topic,
+    select_active_two,
+    select_subject_tree,
+    set_subject_active_two,
+    set_subject_active_topic
+} from '@/store/slice/subject';
 import TopicDetail from './components/TopicDetail';
 import TopicList from './components/TopicList';
 import { useAppDispatch, useAppSelector } from '@/store';
+import { SubjectData } from '@/utils/request';
 
 // 禁用含有children字段的项
-const disableHasChildrenItem = (items: CourseType[]) => {
+const disableHasChildrenItem = (items: SubjectData[]) => {
     const _items = JSON.parse(JSON.stringify(items))
-    return _items.map((item: CourseType) => {
+    return _items.map((item: SubjectData) => {
         if (item.children?.length > 0) {
             item.disabled = true
             item.children = disableHasChildrenItem(item.children)
@@ -29,8 +38,8 @@ function SubjectAdd() {
     // 获取学科列表
     useEffect(() => {
         dispatch(get_subject_tree_async()).then((res: any) => {
-            console.log('resss', res)
-            dispatch(set_active_two(res.payload?.[0]?.children?.[0] as CourseType))
+            // console.log('resss', res)
+            dispatch(set_subject_active_two(res.payload?.[0]?.children?.[0] as SubjectData))
         })
     }, [])
     // 获取题目列表
@@ -41,7 +50,7 @@ function SubjectAdd() {
 
     const onChange = (newValue: string, nameArr: ReactNode[]) => {
         dispatch(set_subject_active_topic(null))
-        dispatch(set_active_two({
+        dispatch(set_subject_active_two({
             title: nameArr[0],
             value: newValue
         }))

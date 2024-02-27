@@ -1,15 +1,24 @@
-import React, { FC, useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Table } from 'antd'
-// import { tableDefaultData, tableColumns } from './interface'
 import styles from './index.module.scss'
 import { useAppSelector, useAppDispatch } from '@/store';
-import { select_exam_list, get_exam_history } from '@/store/slice/subject';
+import { select_exam_list, get_exam_history, select_corret_exam_list_loading } from '@/store/slice/subject';
 import { Tag, Space, Badge } from 'antd'
 import { useNavigate } from 'react-router';
 
 
 function CorretExamList() {
-    const exam_list = useAppSelector(select_exam_list)
+    let exam_list: any = useAppSelector(select_exam_list)
+
+    const loading = useAppSelector(select_corret_exam_list_loading)
+
+    exam_list = exam_list.map((item: any) => {
+        return {
+            ...item,
+            key: item._id
+        }
+    })
+
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
@@ -32,15 +41,15 @@ function CorretExamList() {
     const tableColumns = [{
         title: '试卷名称',
         dataIndex: 'subject_name',
-        key: '_id',
+        key: 'subject_name',
     }, {
         title: '考试时间',
         dataIndex: 'created',
-        key: '_id',
+        key: 'created',
     }, {
         title: '是否阅卷',
         dataIndex: 'is_judge',
-        key: '_id',
+        key: 'is_judge',
         render: (status: boolean) => {
             const statusObj = !status ? {
                 status: 'default',
@@ -62,10 +71,10 @@ function CorretExamList() {
         key: 'x',
         render: (row: any) => {
             return (
-                <Tag color={row.is_judge? 'blue' : 'red'} onClick={() => {
+                <Tag color={row.is_judge ? 'blue' : 'red'} onClick={() => {
                     read_exam_click(row)
-                }} style={{cursor: 'pointer' }}>
-                    { row.is_judge ? "查看" : "阅卷" }
+                }} style={{ cursor: 'pointer' }}>
+                    {row.is_judge ? "查看" : "阅卷"}
                 </Tag>
             )
         },
@@ -74,7 +83,7 @@ function CorretExamList() {
     return (
         <div className={styles["exam-history"]}>
             <div className='table-list-wrapper'>
-                <Table dataSource={exam_list} columns={tableColumns} pagination={false} />
+                <Table loading={loading} dataSource={exam_list} columns={tableColumns} pagination={false} />
             </div>
         </div>
     )

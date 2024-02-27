@@ -1,17 +1,13 @@
-//import hooks
 import React, { useEffect, } from 'react';
-//import components
 import { Table, Divider, Form } from 'antd';
 import { useAppDispatch } from '@/store'
 import { get_student_async, select_user_student_list, set_current_edit_userinfo, set_is_show_user_edit_modal } from '@/store/slice/user';
 import { useSelector } from 'react-redux';
 import { get_subject_tree_async } from '@/store/slice/subject';
-import axios from 'axios';
+import { userDelete } from '@/utils/request';
 
 const ListTable: React.FC = () => {
-    const [form] = Form.useForm();
     const dispatch = useAppDispatch();
-
     const student_list = useSelector(select_user_student_list)
 
     useEffect(() => {
@@ -20,18 +16,15 @@ const ListTable: React.FC = () => {
     }, [])
 
     async function edit_click(record: any) {
-        // console.log(record)
         dispatch(set_current_edit_userinfo(record))
         dispatch(set_is_show_user_edit_modal(true))
     }
 
     async function delete_click(record: any) {
-        // delete_click
-        await axios.delete(`/api/user/${record._id}`)
+        await userDelete(record._id)
         dispatch(get_student_async())
     }
 
-    // Groups?.forEach((group: { id: string | number; name: any; }) => gradeValueEnum[group.id] = {text: group.name});
     const columns = [
         {
             title: '序号',

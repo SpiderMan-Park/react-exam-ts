@@ -4,7 +4,12 @@ import classnames from 'classnames'
 import colorsData from "./color.json";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from '@/store'
-import { get_subject_tree_async, select_current_two_subject, select_subject_tree, set_current_two_subject } from "@/store/slice/subject";
+import {
+    get_subject_tree_async,
+    select_current_two_subject,
+    select_subject_tree,
+    set_current_two_subject
+} from "@/store/slice/subject";
 function ExamSelect() {
     const dispatch = useAppDispatch()
     const navigate = useNavigate();

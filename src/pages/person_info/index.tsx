@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import type { FormInstance } from 'antd/es/form'
-import { UploadChangeParam, UploadFile, RcFile } from 'antd/es/upload'
+import { UploadChangeParam, UploadFile } from 'antd/es/upload'
 import { DatePicker, Form, Input, Select, Button, message, UploadProps } from 'antd'
 import styles from './index.module.scss'
 import { useNavigate } from 'react-router'
@@ -9,7 +9,8 @@ import CustomUpload from '@/common_components/Upload'
 import dayjs from 'dayjs'
 import { select_user_info, get_user_info } from '@/store/slice/user'
 import { getImgUrl, upload_imgs } from '@/utils'
-import axios from '@/utils/http'
+import { userInfoPatch } from '@/utils/request';
+
 type initUserType = {
     name: string            // 学生花名
     vChat: string          // 微信名字
@@ -73,7 +74,7 @@ function PersonInfo() {
             } else {
                 delete params.avatar
             }
-            await axios.patch(`/api/user/${userInfo?._id}`, params)
+            await userInfoPatch(userInfo._id, params)
             if (!isEdit) {
                 message.success('个人信息录入成功')
                 if (userInfo.role === 'student') {
@@ -200,16 +201,16 @@ function PersonInfo() {
                     </Form.Item>
 
                     <Form.Item
-                        label="微信号"
+                        label="v"
                         name="vChat"
                         rules={[
                             {
                                 required: true,
-                                message: '请输入微信号',
+                                message: '请输入v',
                             },
                         ]}
                     >
-                        <Input placeholder="请输入微信号" />
+                        <Input placeholder="请输入v" />
                     </Form.Item>
 
                     <Form.Item>

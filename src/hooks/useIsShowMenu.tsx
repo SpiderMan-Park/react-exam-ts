@@ -1,7 +1,7 @@
-import { useLocation } from "react-router-dom"
-import { type RouterKeys } from "@/config"
+import { useLocation } from "react-router-dom";
+import { type RouterKeys } from '../config';
 import { useAppSelector } from '@/store';
-import { select_menu, MenuData } from "@/store/slice/user";
+import { select_menu } from '@/store/slice/user';
 
 function useIsShowMenu() {
     const location = useLocation()
@@ -12,9 +12,9 @@ function useIsShowMenu() {
         return false
     }
 
-    const menu = menus.find((item: MenuData) => {
+    const menu = menus.find((item) => {
         return item.key === key
-    }) as MenuData
+    })
 
     if (menu?.hasMenu) {
         return true

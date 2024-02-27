@@ -3,15 +3,27 @@ import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import usePathKey from '@/hooks/usePathKey';
-import { useAppSelector } from '@/store'
-import { select_menu, MenuData } from '@/store/slice/user';
+import { useAppSelector } from '@/store/index';
+import { select_menu } from '@/store/slice/user';
+
+type MenuItem = {
+    label: string
+    key: string
+    path: string
+}
 
 const App: React.FC = () => {
     const [current, setCurrent] = useState('');
     const navigate = useNavigate()
     const path_key = usePathKey()
-    const menus = useAppSelector(select_menu)
-
+    let menus: MenuItem[] = useAppSelector(select_menu)
+    menus = menus.map((item) => {
+        return {
+            label: item.label,
+            key: item.key,
+            path: item.path
+        }
+    })
     useEffect(() => {
         if (path_key) {
             setCurrent(path_key)
@@ -20,7 +32,7 @@ const App: React.FC = () => {
 
     const onClick: MenuProps['onClick'] = (e) => {
         setCurrent(e.key)
-        const path = menus.find((item: MenuData) => {
+        const path = menus.find((item) => {
             return item.key === e.key
         })?.path as string
         navigate(path)

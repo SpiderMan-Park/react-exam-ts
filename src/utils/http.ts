@@ -2,17 +2,22 @@ import axios from 'axios'
 import EventBus from './event'
 
 const instance = axios.create({
-
+    validateStatus: function (status) {
+        return status < 500; // 处理状态码小于500的情况
+    }
 })
 
 instance.interceptors.response.use(function (response) {
     if (response.status === 200) {
         if (response.data.code === 401) {
             EventBus.emit('global_not_login', response.data.msg)
-            return Promise.reject('没有登录状态')
+            // return Promise.reject('没有登录状态')
         }
-    } else {
-        // EventBus.emit('global_error_tips', response.data.message)
+        if (response.data.code === -1) {
+            EventBus.emit('global_error_tips', response.data.msg)
+        }
+    } else if (response.status === 403) {
+        EventBus.emit('global_error_tips', '没有权限，别瞎访问')
     }
 
     return response;

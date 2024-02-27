@@ -1,15 +1,15 @@
 import { Modal, Form, Select, Input, message } from "antd";
 import { useState, useEffect } from "react";
 import axios from "@/utils/http";
-import { MESSAGE_ADD_SUCCESS, MESSAGE_ADD_EERROR } from "../constant";
 import styles from "./course.module.scss";
-
+import { subjectAddPost } from '@/utils/request';
 interface CourseAddProps {
     children: React.ReactElement;
     handleSuccess?: () => void;
     handleOk?: () => void;
     handleCancel?: () => void;
 }
+
 type Course = {
     name: string;
     key: string;
@@ -31,13 +31,8 @@ export default function CourseAdd(props: CourseAddProps) {
             .validateFields()
             .then(async (formData) => {
                 // [x] 课程新增 请求
-                let res = await axios.post("/api/subject/two", formData);
-                if (res.data.code === 0) {
-                    message.success(MESSAGE_ADD_SUCCESS);
-                    props.handleSuccess && props.handleSuccess();
-                } else {
-                    message.error(MESSAGE_ADD_EERROR);
-                }
+                await subjectAddPost(formData)
+                props.handleSuccess && props.handleSuccess();
                 setIsModalOpen(false);
             })
             .catch(console.error)
