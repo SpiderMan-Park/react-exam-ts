@@ -30,7 +30,8 @@ type Data = {
     user_info: Partial<UserData>,
     student_list: UserData[]
     is_show_user_edit_modal: boolean
-    current_edit_userinfo: UserData
+    current_edit_userinfo: UserData,
+    admin_list: UserData[]
 }
 
 const initialState: Data = {
@@ -38,7 +39,8 @@ const initialState: Data = {
     user_info: {},
     student_list: [],
     is_show_user_edit_modal: false,
-    current_edit_userinfo: {} as UserData
+    current_edit_userinfo: {} as UserData,
+    admin_list: []
 }
 
 export const get_menu_async = createAsyncThunk<MenuData[]>(
@@ -61,6 +63,14 @@ export const get_student_async = createAsyncThunk<any>(
     'get/user_student',
     async (action, state) => {
         const res: AxiosResData<[]> = await axios.get('/api/user/student')
+        return res.data.data
+    }
+)
+
+export const get_admin_async = createAsyncThunk<any>(
+    'get/user_admin',
+    async (action, state) => {
+        const res: AxiosResData<[]> = await axios.get('/api/user/admin')
         return res.data.data
     }
 )
@@ -93,6 +103,9 @@ export const userSlice = createSlice({
             .addCase(get_student_async.fulfilled, (state, res) => {
                 state.student_list = res.payload
             })
+            .addCase(get_admin_async.fulfilled, (state, res) => {
+                state.admin_list = res.payload
+            })
     }
 })
 
@@ -110,6 +123,9 @@ export const select_is_show_user_edit_modal = (state: RootState) => {
 
 export const select_current_edit_userinfo = (state: RootState) => {
     return state.user.current_edit_userinfo
+}
+export const select_user_admin_list = (state: RootState) => {
+    return state.user.admin_list
 }
 
 export const {
