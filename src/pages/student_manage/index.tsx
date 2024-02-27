@@ -1,6 +1,12 @@
+import Modal from './components/Modal'
+import ListTable from './components/ListTable'
+
 function StudentManage() {
     return (
-        <h1>StudentManage</h1>
+        <>
+            <Modal />
+            <ListTable />
+        </>
     )
 }
 

@@ -27,12 +27,18 @@ export type UserData = {
 
 type Data = {
     menu: MenuData[],
-    user_info: Partial<UserData>
+    user_info: Partial<UserData>,
+    student_list: UserData[]
+    is_show_user_edit_modal: boolean
+    current_edit_userinfo: UserData
 }
 
 const initialState: Data = {
     menu: [],
-    user_info: {}
+    user_info: {},
+    student_list: [],
+    is_show_user_edit_modal: false,
+    current_edit_userinfo: {} as UserData
 }
 
 export const get_menu_async = createAsyncThunk<MenuData[]>(
@@ -51,13 +57,30 @@ export const get_user_info = createAsyncThunk<UserData>(
     }
 )
 
+export const get_student_async = createAsyncThunk<any>(
+    'get/user_student',
+    async (action, state) => {
+        const res: AxiosResData<[]> = await axios.get('/api/user/student')
+        return res.data.data
+    }
+)
+
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
         set_user_info: (state, action) => {
             state.user_info = action.payload
-        }
+        },
+        set_is_show_user_edit_modal: (state, aciton) => {
+            state.is_show_user_edit_modal = aciton.payload
+        },
+        set_current_edit_userinfo: (state, aciton) => {
+            state.current_edit_userinfo = aciton.payload
+        },
+        set_edit_user_topic_role: (state, aciton) => {
+            state.current_edit_userinfo.topic_role = aciton.payload
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -67,6 +90,9 @@ export const userSlice = createSlice({
             .addCase(get_user_info.fulfilled, (state, res) => {
                 state.user_info = res.payload
             })
+            .addCase(get_student_async.fulfilled, (state, res) => {
+                state.student_list = res.payload
+            })
     }
 })
 
@@ -74,6 +100,23 @@ export const select_menu = (state: RootState) => { return state.user.menu }
 
 export const select_user_info = (state: RootState) => { return state.user.user_info }
 
-export const { set_user_info } = userSlice.actions
+export const select_user_student_list = (state: RootState) => {
+    return state.user.student_list
+}
+
+export const select_is_show_user_edit_modal = (state: RootState) => {
+    return state.user.is_show_user_edit_modal
+}
+
+export const select_current_edit_userinfo = (state: RootState) => {
+    return state.user.current_edit_userinfo
+}
+
+export const {
+    set_user_info,
+    set_is_show_user_edit_modal,
+    set_current_edit_userinfo,
+    set_edit_user_topic_role
+} = userSlice.actions
 
 export default userSlice.reducer
