@@ -1,18 +1,18 @@
 import { useEffect } from 'react'
-import { Table } from 'antd'
-import styles from './index.module.scss'
+import { Table, Pagination } from 'antd';
 import { useAppSelector, useAppDispatch } from '@/store';
-import { select_exam_list, get_exam_history, select_corret_exam_list_loading } from '@/store/slice/subject';
+import { get_exam_history, select_corret_exam_list_loading, select_exam_history_data, set_exam_list_data } from '../../store/slice/subject';
 import { Tag, Space, Badge } from 'antd'
 import { useNavigate } from 'react-router';
+import dayjs from 'dayjs'
+import Search from './Search'
+import styles from './index.module.scss'
 
-
+const PAGE_COUNT = 8;
 function CorretExamList() {
-    let exam_list: any = useAppSelector(select_exam_list)
-
+    let exam_list_data = useAppSelector(select_exam_history_data)
     const loading = useAppSelector(select_corret_exam_list_loading)
-
-    exam_list = exam_list.map((item: any) => {
+    let exam_list = exam_list_data.list.map((item: any) => {
         return {
             ...item,
             key: item._id
@@ -43,9 +43,16 @@ function CorretExamList() {
         dataIndex: 'subject_name',
         key: 'subject_name',
     }, {
+        title: '学生姓名',
+        dataIndex: 'user_name',
+        key: 'user_name',
+    }, {
         title: '考试时间',
         dataIndex: 'created',
         key: 'created',
+        render: (_: any, record: any) => {
+            return <span>{dayjs(record.created).format('YYYY MM-DD hh:mm:ss')}</span>
+        }
     }, {
         title: '是否阅卷',
         dataIndex: 'is_judge',
@@ -69,21 +76,41 @@ function CorretExamList() {
         title: '操作',
         dataIndex: '',
         key: 'x',
-        render: (row: any) => {
+        render: (row: any, record: any) => {
             return (
-                <Tag color={row.is_judge ? 'blue' : 'red'} onClick={() => {
-                    read_exam_click(row)
+                <Tag color={record.is_judge ? 'blue' : 'red'} onClick={() => {
+                    read_exam_click(record)
                 }} style={{ cursor: 'pointer' }}>
-                    {row.is_judge ? "查看" : "阅卷"}
+                    {record.is_judge ? "查看" : "阅卷"}
                 </Tag>
             )
         },
     }]
+    function page_change(count: number) {
+        dispatch(set_exam_list_data({
+            current_page: count
+        }))
+
+        dispatch(get_exam_history({
+            ...exam_list_data.search_params,
+            skip: PAGE_COUNT * (count - 1)
+        }))
+    }
 
     return (
         <div className={styles["exam-history"]}>
+            <div className={styles.search_wrap}>
+                <Search />
+            </div>
             <div className='table-list-wrapper'>
                 <Table loading={loading} dataSource={exam_list} columns={tableColumns} pagination={false} />
+                <Pagination
+                    className={styles.pagenation}
+                    pageSize={PAGE_COUNT}
+                    current={exam_list_data.current_page}
+                    total={exam_list_data.count}
+                    onChange={page_change}
+                />
             </div>
         </div>
     )

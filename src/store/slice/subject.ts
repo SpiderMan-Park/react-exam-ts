@@ -8,7 +8,8 @@ import {
     getExamHistory,
     ExamData,
     getExamByIdRequest,
-    ResData
+    ResData,
+    getSubjectOne
 } from '@/utils/request';
 
 // 题库仓库state类型
@@ -28,8 +29,16 @@ type SubjectState = {
     exam_topic_list: []
     current_exam_topic_id: string
     // 考试历史记录
-    exam_list: [],
-    corret_exam_list_loading: boolean
+    exam_list_data: {
+        list: [],
+        count: number,
+        limit: number,
+        skip: number,
+        search_params: {},
+        current_page: 1
+    }
+    corret_exam_list_loading: boolean,
+    subject_one: any[]
 }
 
 const initialState = {
@@ -41,9 +50,17 @@ const initialState = {
     current_two_subject: '',
     exam_topic_list: [],
     current_exam_topic_id: '',
-    exam_list: [],
     corret_exam_list: [],
-    corret_exam_list_loading: false
+    corret_exam_list_loading: false,
+    exam_list_data: {  // 分页查询
+        list: [],
+        count: 0,
+        limit: 10,
+        skip: 0,
+        search_params: {},
+        current_page: 1
+    },
+    subject_one: []
 } as SubjectState
 
 // 获取课程树形数据
@@ -59,6 +76,13 @@ export const get_topic_two_list: any = createAsyncThunk<TopicData[], string>(
     'get/topic_two_list',
     async (action, state) => {
         return await getTopic2List(action)
+    }
+)
+
+export const get_subject_one = createAsyncThunk(
+    'get/subject_one',
+    async (action, state) => {
+        return await getSubjectOne()
     }
 )
 
@@ -121,6 +145,12 @@ export const subjectSlice = createSlice({
                 }
             })
         },
+        set_exam_list_data: (state, action) => {
+            state.exam_list_data = {
+                ...state.exam_list_data,
+                ...action.payload
+            }
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -142,13 +172,17 @@ export const subjectSlice = createSlice({
                 state.corret_exam_list_loading = true
             })
             .addCase(get_exam_history.fulfilled, (state, res: any) => {
-                state.exam_list = res.payload
+                state.exam_list_data.list = res.payload.data
+                state.exam_list_data.count = res.payload.count
                 state.corret_exam_list_loading = false
             })
             .addCase(get_corret_exam_async.fulfilled, (state, res: any) => {
                 state.exam_topic_list = res.payload.topic_list
                 // 这个逻辑对于阅读试卷是多余的
                 state.current_exam_topic_id = res.payload.topic_list[0]._id
+            })
+            .addCase(get_subject_one.fulfilled, (state, res: any) => {
+                state.subject_one = res.payload
             })
     }
 })
@@ -174,8 +208,12 @@ export const select_current_exam_topic = (state: RootState) => {
     }) || {}
 }
 // 考试历史记录
-export const select_exam_list = (state: RootState) => { return state.subject.exam_list }
-
+export const select_exam_history_data = (state: RootState) => {
+    return state.subject.exam_list_data
+}
+export const select_subject_one = (state: RootState) => {
+    return state.subject.subject_one
+}
 export const select_corret_exam_list_loading = (state: RootState) => {
     return state.subject.corret_exam_list_loading
 }
@@ -186,7 +224,8 @@ export const {
     set_current_exam_topic_id,
     set_exam_answer,
     set_exam_corret,
-    set_exam_topic_list
+    set_exam_topic_list,
+    set_exam_list_data
 } = subjectSlice.actions
 
 export default subjectSlice.reducer

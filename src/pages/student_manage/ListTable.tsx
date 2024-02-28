@@ -14,6 +14,7 @@ import { userDelete } from '@/utils/request';
 import dayjs from 'dayjs'
 import { useAppSelector, useAppDispatch } from '@/store';
 import { Pagination } from 'antd';
+import styles from './index.module.scss'
 
 const PAGE_COUNT = 8
 
@@ -35,7 +36,7 @@ const ListTable: React.FC = () => {
         dispatch(set_is_show_user_edit_modal(true))
     }
 
-    async function delete_click (record: any) {
+    async function delete_click(record: any) {
         await userDelete(record._id)
         dispatch(get_student_async({
             ...search_params,
@@ -66,6 +67,7 @@ const ListTable: React.FC = () => {
         {
             title: '花名',
             dataIndex: 'name',
+            key: 'name',
             render: (dom: any, entity: any) => {
                 return (
                     <a
@@ -80,32 +82,39 @@ const ListTable: React.FC = () => {
         {
             title: '所属课程',
             dataIndex: 'sourceId',
+            key: 'sourceId',
         },
         {
             title: '当前薪资',
             dataIndex: 'sourceSalary',
+            key: 'sourceSalary',
         },
         {
             title: '技术栈',
             dataIndex: 'technologyStack',
+            key: 'technologyStack',
         },
         {
             title: '学历',
             dataIndex: 'educationBackground',
+            key: 'educationBackground',
         },
         {
             title: '号码',
             dataIndex: 'phone',
+            key: 'phone',
         },
         {
             title: '课程权限',
             dataIndex: 'role',
+            key: 'role',
         },
         {
             title: '注册时间',
             dataIndex: 'created',
+            key: 'created',
             render: (_: any, record: any) => {
-                return <span>{dayjs().format('YYYY MM-DD')}</span>
+                return <span>{dayjs(record.created).format('YYYY MM-DD')}</span>
             }
         },
         {
@@ -137,7 +146,13 @@ const ListTable: React.FC = () => {
                 columns={columns}
                 pagination={false}
             />
-            <Pagination pageSize={PAGE_COUNT} current={current_page} total={count} onChange={page_change} />
+            <Pagination
+                className={styles.pagenation}
+                pageSize={PAGE_COUNT}
+                current={current_page}
+                total={count}
+                onChange={page_change}
+            />
         </>
     );
 };

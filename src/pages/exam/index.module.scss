@@ -1,82 +1,91 @@
-.exam {
-  display: flex;
-  height: calc(100vh - 170px);
-  max-width: 95rem;
-  margin-top: 1.25rem;
-}
 .exam_left {
-  width: 20rem;
-  border-radius: 0.5rem;
+  width: 320px;
+
+  border-radius: 8px;
   opacity: 1;
-  margin-right: 1.75rem;
-  background-color: #fff;
-  padding: 1.5rem;
+  margin-right: 28px;
+
+  background: white;
+  /* background-color: #fff; */
+  padding: 24px;
   font-family: Source Han Sans CN;
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 350;
   letter-spacing: 0em;
+
   word-wrap: break-word;
+  /* main-color */
+  /* box-sizing: border-box; */
   z-index: 0;
 }
 .exam_left_content {
-  margin-top: 1.875rem;
+  margin-top: 30px;
 }
 .exam_right {
   width: 86%;
   height: 100%;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   opacity: 1;
+
   background: white;
   box-sizing: border-box;
 }
 .exam_right_marigin {
-  margin: 1.5rem 2.625rem;
+  margin: 24px 42px;
+}
+.exam {
+  display: flex;
+  height: calc(100vh - 10.625rem);
+  max-width: 1520px;
+  margin-top: 20px;
 }
 .questiontab {
   background-color: white;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   opacity: 1;
-  margin: 0.625rem 0;
+  margin: 10px 0;
+
   position: relative;
-  cursor: pointer;
 }
 
 .title {
   font-family: Source Han Sans CN;
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: bold;
   letter-spacing: 0em;
-  margin-left: 0.625rem;
+  margin-left: 10px;
+
+  /* text-1 */
   color: #3a3d40;
   position: relative;
 }
 .title::before {
   content: "";
   display: block;
-  width: 0.3rem; /* 长方形的宽度 */
-  height: 1rem; /* 长方形的高度 */
+  width: 4.8px; /* 长方形的宽度 */
+  height: 16px; /* 长方形的高度 */
   background-color: rgb(56, 125, 254); /* 长方形的背景颜色 */
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: -0.625rem; /* 负值表示向左偏移 */
+  left: -10px; /* 负值表示向左偏移 */
 }
 .rightTitle {
-  margin-left: 0.6875rem;
+  margin-left: 11px;
 }
 .question {
-  border-radius: 4px;
-  max-width: 15rem;
+  border-radius: 0.25rem;
+  max-width: 240px;
   box-sizing: border-box;
-  padding: 0.75rem 0.625rem;
+  padding: 12px 10px;
   color: #5f6367;
-  margin-right: 0.625rem;
+  margin-right: 10px;
 }
 .circle {
   position: absolute;
-  width: 1.25rem;
-  height: 1.25rem;
-  right: -0.9375rem;
+  width: 20px;
+  height: 20px;
+  right: -15px;
   border-radius: 50%;
   background-color: rgb(218, 222, 226);
   color: #ffffff;
@@ -86,7 +95,7 @@
 
 .circle::before {
   content: "\2713"; /* Unicode for √ symbol */
-  font-size: 0.75rem;
+  font-size: 12px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -111,11 +120,11 @@
   /* 修改按钮的背景颜色和文字颜色 */
   background-color: #007bff;
   color: #fff;
-  height: 2.5rem;
-  width: 6.25rem;
+  height: 40px;
+  width: 100px;
 }
 .customButtonSvg {
-  margin-right: 0.625rem;
+  margin-right: 10px;
 }
 
 .exam_right_top {
@@ -125,30 +134,35 @@
 }
 .exam_right_question {
   font-family: Source Han Sans CN;
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 350;
   letter-spacing: 0em;
+
+  /* text-1 */
   color: #3a3d40;
 }
 .exam_right_desc {
   font-family: Source Han Sans CN;
-  font-size: 0.875rem;
+  font-size: 16px;
   font-weight: 350;
   letter-spacing: 0em;
+
+  /* text-2 */
   color: #5f6367;
 }
 .exam_right_pic {
-  width: 17.5rem;
-  height: 9.6875rem;
+  width: 280px;
+  height: 155px;
   opacity: 1;
+
   background: white;
 }
 
 .customInput {
   /* 设置输入框的背景颜色 */
-  margin-top: 1.5rem;
-  height: 7.5rem;
-  border-radius: 4px;
+  margin-top: 24px;
+  height: 120px;
+  border-radius: 0.25rem;
   opacity: 1;
   color: #5f6367;
   background: rgb(242, 244, 247);
@@ -157,29 +171,29 @@
   background-color: rgb(242, 244, 247);
   color: rgb(56, 125, 254);
   font-weight: 700;
-  font-size: 1rem;
-  border: 0.0625rem solid #1880ff;
-  height: 2.5rem;
-  width: 7.5rem;
-  border-radius: 4px;
+  font-size: 16px;
+  border: 1px solid #1880ff;
+  height: 40px;
+  width: 120px;
+  border-radius: 0.25rem;
   opacity: 1;
-  margin-right: 1rem;
+  margin-right: 16px;
 }
 .summitbtn {
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 700;
-  height: 2.5rem;
-  width: 7.5rem;
-  border-radius: 4px;
+  height: 40px;
+  width: 120px;
+  border-radius: 0.25rem;
 }
 .exam_right_btn {
   display: flex;
-  margin-top: 1.0625rem;
-  margin-bottom: 0.625rem;
+  margin-top: 17px;
+  margin-bottom: 10px;
 }
 .exam_right_tip {
   font-family: Source Han Sans CN;
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 350;
   letter-spacing: 0em;
   color: #9fa3a7;

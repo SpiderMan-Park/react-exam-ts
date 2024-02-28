@@ -1,8 +1,7 @@
-import './App.scss';
+import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Layout from '@/common_components/layout';
 import { routersData } from './config';
-import { useEffect } from 'react';
 import { useAppDispatch } from '@/store';
 import { get_user_info } from '@/store/slice/user';
 import EventBus from '@/utils/event'
@@ -15,12 +14,31 @@ import ExamHistory from './pages/exam_history';
 import ReadExam from './pages/read_exam';
 import CorretExamList from './pages/corret_exam_list';
 import CorretExam from './pages/corret_exam';
-import StudentManage from './pages/student_manage';
+// import StudentManage from './pages/student_manage';
+// import SubjectAdd from './pages/subject_add';
 import SubjectManage from './pages/subject_manage';
-import SubjectAdd from './pages/subject_add';
 import AdminManage from './pages/admin_manage';
 import { notification } from 'antd';
 import { logoutRequest } from './utils/request';
+import useRenderCheck from '@/hooks/renderCheck';
+import './App.scss';
+
+const AsyncSubjectAdd = lazy(() => import(/* webpackChunkName: "subject_add" */'./pages/subject_add'))
+const AsyncStudentManage = lazy(() => import(/* webpackChunkName: "student_manage" */'./pages/student_manage'))
+function SubjectAdd() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AsyncSubjectAdd />
+    </Suspense>
+  )
+}
+function StudentManage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AsyncStudentManage />
+    </Suspense>
+  )
+}
 
 const openNotification = (msg: string) => {
   notification.error({
@@ -32,6 +50,8 @@ const openNotification = (msg: string) => {
 function App() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+
+  useRenderCheck('App')
 
   useEffect(() => {
     // 通用的配置  或者 用户信息等待接口   建议放在根组件

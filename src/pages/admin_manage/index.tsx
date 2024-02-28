@@ -1,16 +1,13 @@
-import { useEffect, } from 'react';
-import { Table, Form, Input, Button } from 'antd';
-import { useAppDispatch } from '@/store'
-import styles from './index.module.scss'
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { Table, Input, Button } from 'antd';
+import { useAppDispatch, useAppSelector } from '@/store'
 import { get_admin_async, select_user_admin_list } from '@/store/slice/user';
-import { useState } from 'react';
 import { addAdminRequest } from '@/utils/request';
+import styles from './index.module.scss'
 
 function AdminManage() {
-    const [form] = Form.useForm();
     const dispatch = useAppDispatch();
-    const admin_list = useSelector(select_user_admin_list)
+    const admin_list = useAppSelector(select_user_admin_list)
 
     const [phone, set_phone] = useState('')
 
@@ -31,26 +28,32 @@ function AdminManage() {
         {
             title: '花名',
             dataIndex: 'name',
+            key: 'name'
         },
         {
             title: '所属课程',
             dataIndex: 'sourceId',
+            key: 'sourceId'
         },
         {
             title: '当前薪资',
             dataIndex: 'sourceSalary',
+            key: 'sourceSalary'
         },
         {
             title: '技术栈',
             dataIndex: 'technologyStack',
+            key: 'technologyStack'
         },
         {
             title: '学历',
             dataIndex: 'educationBackground',
+            key: 'educationBackground'
         },
         {
             title: '手机号码',
             dataIndex: 'phone',
+            key: 'phone'
         },
     ];
 

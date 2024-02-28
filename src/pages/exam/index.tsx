@@ -95,13 +95,13 @@ function Exam() {
                 <div className={styles.exam_right_marigin}>
                     <div className={styles.exam_right_top}>
                         <div className={`${styles.title} ${styles.rightTitle}`}>
-                            题目详情
+                            题目
                         </div>
                     </div>
                     <p className={styles.exam_right_question}>
                         {`问题: ${current_exam_topic.title}`}
                     </p>
-                    <p className={styles.exam_right_desc}>题目表述</p>
+                    <p className={`${styles.exam_right_desc} ${styles.title}`}>详细描述</p>
                     <div className={styles.exam_right_pic}>
                         {current_exam_topic.dec}
                     </div>

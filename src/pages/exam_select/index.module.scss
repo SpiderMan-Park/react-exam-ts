@@ -10,7 +10,7 @@
   }
   .content {
     padding: 20px 32px 0;
-    height: calc(100vh - 254px);
+    min-height: calc(100vh - 300px);
     overflow-y: auto;
     border-bottom: 1px solid #d8d8d8;
 

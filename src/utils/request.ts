@@ -1,5 +1,4 @@
 import axios from './http'
-import Search from '@/pages/student_manage/Search';
 
 type AxiosRes<T = ResData> = {
     config: Object,
@@ -188,6 +187,15 @@ export function subject2Delete(subject2_id: string) {
     })
 }
 
+// 获取课程一级分类
+// /api/subject/one
+export function getSubjectOne() {
+    return new Promise(async (resolve, rejects) => {
+        const res: AxiosResData = await axios.get(`/api/subject/one`)
+        resolve(res.data.data)
+    })
+}
+
 // 课程新增
 export type AddSubject2Body = {
     one_key: string,
@@ -211,8 +219,8 @@ export function getTopic2List(suject2_id: string) {
 // 获取exam考题历史记录 获取所有考卷 （学生 管理员）
 export function getExamHistory(body: any) {
     return new Promise<ResData>(async (resolve, rejects) => {
-        const res: AxiosResData = await axios.post(`/api/exam`, body)
-        resolve(res.data.data)
+        const res: AxiosResData<ExamData[]> = await axios.post(`/api/exam`, body)
+        resolve(res.data)
     })
 }
 

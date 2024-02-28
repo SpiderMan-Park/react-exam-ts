@@ -25,6 +25,7 @@
     "camelcase": "^6.2.1",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "classnames": "^2.3.2",
+    "speed-measure-webpack-plugin": "^1.5.0",
     "cos-js-sdk-v5": "^1.6.0",
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^3.2.0",

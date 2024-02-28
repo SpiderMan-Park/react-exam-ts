@@ -1,10 +1,10 @@
+import { useEffect } from "react"
 import useIsShowHeader from "@/hooks/useIsShowHeader"
 import useIsShowMenu from "@/hooks/useIsShowMenu"
 import { Outlet } from "react-router-dom"
 import Header from "./header/index"
 import Menu from "./menu"
 import { useAppDispatch, useAppSelector } from '@/store';
-import { useEffect } from "react"
 import { get_menu_async, select_user_info } from "@/store/slice/user"
 import classnames from 'classnames'
 

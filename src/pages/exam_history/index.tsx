@@ -4,10 +4,10 @@ import styles from './index.module.scss'
 import { useAppSelector, useAppDispatch } from '@/store';
 import { Tag, Space, Badge } from 'antd'
 import { useNavigate } from 'react-router';
-import { get_exam_history, select_exam_list } from '@/store/slice/subject';
+import { get_exam_history, select_exam_history_data } from '../../store/slice/subject';
 
 function ExamHistory() {
-    const exam_list = useAppSelector(select_exam_list)
+    const exam_list_data = useAppSelector(select_exam_history_data)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
@@ -62,7 +62,7 @@ function ExamHistory() {
     return (
         <div className={styles["exam-history"]}>
             <div className='table-list-wrapper'>
-                <Table rowKey={'_id'} dataSource={exam_list} columns={tableColumns} pagination={false} />
+                <Table dataSource={exam_list_data.list} columns={tableColumns} pagination={false} />
             </div>
         </div>
     )

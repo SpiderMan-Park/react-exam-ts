@@ -60,27 +60,30 @@ function ReadExam() {
                                 <div className={styles.item_wrap}>
                                     <div className={styles.exam_right_marigin}>
                                         <div className={styles.exam_right_top}>
-                                            <div className={`${styles.title} ${styles.rightTitle} `}>
+                                            <div className={`${styles.title} ${styles.rightTitle} ${styles.title_write}`}>
                                                 题目{index + 1}
+                                                <span className={styles.span_tag}>
+                                                    {
+                                                        item.pass ?
+                                                            (
+                                                                <Tag color="green">通过</Tag>
+                                                            ) : (
+                                                                <Tag color="red">不通过</Tag>
+                                                            )
+                                                    }
+                                                </span>
                                             </div>
                                         </div>
                                         <p className={styles.exam_right_question}>
-                                            {`问题: ${item.title}`}
-                                            {
-                                                item.pass ?
-                                                    (
-                                                        <Tag color="green">通过</Tag>
-                                                    ) : (
-                                                        <Tag color="red">不通过</Tag>
-                                                    )
-                                            }
+                                            {`${item.title}`}
+
                                         </p>
-                                        <p className={styles.exam_right_desc}>题目表述：</p>
+                                        <p className={`${styles.title} ${styles.rightTitle} `}>详细描述</p>
                                         <div className={styles.exam_right_pic}>
                                             {item.dec}
                                         </div>
-                                        <div className={`${styles.title}`}>答案：</div>
-                                        <div>
+                                        <div className={`${styles.title} `}>学生答案：</div>
+                                        <div className={`${styles.answer}`}>
                                             {item.answer}
                                         </div>
                                     </div>
@@ -89,7 +92,7 @@ function ReadExam() {
                                         <div className={`${styles.title} ${styles.rightTitle} `}>
                                             批阅
                                         </div>
-                                        <div>
+                                        <div className={`${styles.corret}`}>
                                             {item.comment}
                                         </div>
                                     </div>

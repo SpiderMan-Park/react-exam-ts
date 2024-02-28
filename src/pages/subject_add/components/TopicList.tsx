@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import axios from '@/utils/http'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { get_topic_two_list, select_active_topic, select_active_two, select_subject_loading, select_topic_two_list, set_subject_active_topic } from '@/store/slice/subject'
+import useRenderCheck from '@/hooks/renderCheck';
 
 export default function TopicList() {
     const dispatch = useAppDispatch()
@@ -10,6 +11,8 @@ export default function TopicList() {
     const loading = useAppSelector(select_subject_loading)
     const selectedCourse = useAppSelector(select_active_two)
     const selectedTopic: any = useAppSelector(select_active_topic)
+
+    useRenderCheck('TopicList')
 
     async function deleteTopic(id: string) {
         try {
