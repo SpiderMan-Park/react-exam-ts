@@ -51,7 +51,9 @@ const argv = process.argv.slice(2);
 const writeStatsJson = argv.indexOf('--stats') !== -1;
 
 // Generate configuration  虽然不能用，但是不影响吹牛逼
-const config = smp.wrap(configFactory('production'));
+// const config = smp.wrap(configFactory('production'));
+const config = configFactory('production');
+
 
 const { checkBrowsers } = require('react-dev-utils/browsersHelper');
 checkBrowsers(paths.appPath, isInteractive)

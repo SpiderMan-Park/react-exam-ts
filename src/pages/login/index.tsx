@@ -45,6 +45,7 @@ const LoginPage: React.FC = () => {
     }
 
     const onLogin = async (value: LoginBody) => {
+        // @ts-ignore
         const user_info = await loginPost(value)
         dispatch(set_user_info(user_info))
         if (!user_info.has_person_info) {

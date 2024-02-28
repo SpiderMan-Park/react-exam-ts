@@ -72,6 +72,8 @@ function App() {
 
       logoutRequest().then(() => {
         navigate('/login')
+      }).then(() => {
+        navigate('/login')
       })
     })
   }, [])

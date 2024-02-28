@@ -27,6 +27,7 @@ const ForkTsCheckerWebpackPlugin =
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -251,7 +252,7 @@ module.exports = function (webpackEnv) {
         // This is only used in production mode
         new TerserPlugin({
           terserOptions: {
-            parallel: true,
+            // parallel: true,
             parse: {
               // We want terser to parse ecma 8 code. However, we don't want it
               // to apply any minification steps that turns valid ecma 5 code
@@ -565,6 +566,7 @@ module.exports = function (webpackEnv) {
       ].filter(Boolean),
     },
     plugins: [
+      // isEnvProduction && new BundleAnalyzerPlugin(),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
@@ -638,7 +640,7 @@ module.exports = function (webpackEnv) {
       //   can be used to reconstruct the HTML if necessary
       new WebpackManifestPlugin({
         fileName: 'asset-manifest.json',
-        publicPath: paths.publicUrlOrPath,
+        // publicPath: 'https://devops-react-web-1255639690.cos.ap-nanjing.myqcloud.com/',
         generate: (seed, files, entrypoints) => {
           const manifestFiles = files.reduce((manifest, file) => {
             manifest[file.name] = file.path;
@@ -724,7 +726,7 @@ module.exports = function (webpackEnv) {
             infrastructure: 'silent',
           },
         }),
-      !disableESLintPlugin &&
+        false &&
         new ESLintPlugin({
           // Plugin options
           extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
