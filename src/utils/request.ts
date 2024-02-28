@@ -238,7 +238,7 @@ export type CorretExamBody = {
 }
 export function corretExamPost(exam_id: string, body: CorretExamBody) {
     return new Promise(async (resolve, rejects) => {
-        const res: AxiosResData = await axios.post(`/api/exam/${exam_id}`, body)
+        const res: AxiosResData = await axios.patch(`/api/exam/${exam_id}`, body)
         resolve(res.data.data)
     })
 }
@@ -250,7 +250,7 @@ export type ExamPostBody = {
 }
 export function examPost(body: ExamPostBody) {
     return new Promise(async (resolve, rejects) => {
-        const res: AxiosResData = await axios.post(`/api/exam`, body)
+        const res: AxiosResData = await axios.post(`/api/exam/create`, body)
         resolve(res.data.data)
     })
 }

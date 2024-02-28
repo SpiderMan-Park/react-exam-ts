@@ -11,7 +11,7 @@ import {
     set_exam_corret
 } from '@/store/slice/subject';
 import { corretExamPost } from '@/utils/request';
-
+import TopicCp from '@/common_components/topic/index';
 function CorretExam() {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -38,30 +38,17 @@ function CorretExam() {
     function topic_click(item: any) {
         dispatch(set_current_exam_topic_id(item._id))
     }
-    function pass() {
-
-        dispatch(set_exam_corret({
-            _id: current_exam_topic._id,
-            pass: true,
-            is_corret: true,
-            comment: corret
-        }))
-        set_corret('')
+    function pass(data: any) {
+        dispatch(set_exam_corret(data))
     }
-    function no_pass() {
-        dispatch(set_exam_corret({
-            _id: current_exam_topic._id,
-            pass: false,
-            is_corret: true,
-            comment: corret
-        }))
-        set_corret('')
+    function no_pass(data: any) {
+        dispatch(set_exam_corret(data))
     }
     async function submit_click() {
         await corretExamPost(params.exam_id as string, {
             topic_list
         })
-        navigate('/exam_history')
+        navigate('/corret_exam_list')
     }
 
     function textarea_change(e: any) {
@@ -89,11 +76,6 @@ function CorretExam() {
                                 >
                                     {index + 1}. {item.title}
                                 </div>
-                                {/* <div
-                                    className={`${styles.circle}  ${item.answer ? styles.alreadykeep : ""
-                                        }`}
-                                ></div> */}
-
                                 {
                                     item.is_corret && item.pass ?
                                         (<div
@@ -112,67 +94,20 @@ function CorretExam() {
                 </div>
 
                 <div className={styles.exam_right}>
-                    <div className={styles.exam_right_marigin}>
-                        <div className={styles.exam_right_top}>
-                            <div className={`${styles.title} ${styles.rightTitle} `}>
-                                题目
-                            </div>
-                        </div>
-                        <p className={styles.exam_right_question}>
-                            {`问题: ${current_exam_topic.title}`}
-                        </p>
-                        <p className={`${styles.exam_right_desc} ${styles.title}`}>详细描述：</p>
-                        <div className={styles.exam_right_pic}>
-                            {current_exam_topic.dec}
-                        </div>
-                        <div className={`${styles.title}`}>答案：</div>
-                        <Input.TextArea
-                            value={current_exam_topic.answer}
-                            rows={4}
-                            placeholder="请作答"
-                            className={styles.customInput}
-                            disabled
-                        />
-                    </div>
-
-                    <Divider />
-                    <div className={styles.exam_right_marigin}>
-
-                        <div className={`${styles.title} ${styles.rightTitle} `}>
-                            我的批阅
-                        </div>
-                        <Input.TextArea
-                            value={corret || current_exam_topic.comment}
-                            rows={4}
-                            placeholder="请作答"
-                            className={styles.customInput}
-                            onChange={textarea_change}
-                        />
-                        <div className={styles.exam_right_btn}>
-                            <Button
-                                type="primary"
-                                className={styles.keepbtn}
-                                onClick={pass}
-                            >
-                                通过
-                            </Button>
-                            <Button
-                                type="primary"
-                                className={styles.keepbtn}
-                                onClick={no_pass}
-                            >
-                                不通过
-                            </Button>
-                            <Button
-                                type="primary"
-                                className={styles.summitbtn}
-                                disabled={!can_submit}
-                                onClick={submit_click}
-                            >
-                                提交阅卷
-                            </Button>
-                        </div>
-                    </div>
+                    <TopicCp
+                        type='corret'
+                        topic={current_exam_topic}
+                        pass_cb={pass}
+                        no_pass_cb={no_pass}
+                    />
+                    <Button
+                        type="primary"
+                        className={styles.summitbtn}
+                        disabled={!can_submit}
+                        onClick={submit_click}
+                    >
+                        提交阅卷
+                    </Button>
                 </div>
             </div>
         </div>
