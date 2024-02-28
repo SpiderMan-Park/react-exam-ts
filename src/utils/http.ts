@@ -17,7 +17,7 @@ instance.interceptors.response.use(function (response) {
             EventBus.emit('global_error_tips', response.data.msg)
         }
     } else if (response.status === 403) {
-        EventBus.emit('global_error_tips', '没有权限，别瞎访问')
+        EventBus.emit('global_error_auth', '没有权限，别瞎访问')
     }
 
     return response;

@@ -1,6 +1,12 @@
 import { Modal } from 'antd';
 import { useAppSelector } from '@/store/index';
-import { select_is_show_user_edit_modal, set_is_show_user_edit_modal, select_current_edit_userinfo, set_edit_user_topic_role, get_student_async } from '@/store/slice/user';
+import {
+    select_is_show_user_edit_modal,
+    set_is_show_user_edit_modal,
+    select_current_edit_userinfo,
+    set_edit_user_topic_role,
+    get_student_async
+} from '@/store/slice/user';
 import { useAppDispatch } from '@/store';
 import { select_subject_tree } from '@/store/slice/subject';
 import { Checkbox } from 'antd';
@@ -29,7 +35,7 @@ function EditModal() {
             topic_role: edit_userinfo.topic_role
         })
         dispatch(set_is_show_user_edit_modal(false))
-        dispatch(get_student_async())
+        dispatch(get_student_async({}))
     }
     function onCancel() {
         dispatch(set_is_show_user_edit_modal(false))

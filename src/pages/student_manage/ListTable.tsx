@@ -1,18 +1,33 @@
 import React, { useEffect, } from 'react';
-import { Table, Divider, Form } from 'antd';
-import { useAppDispatch } from '@/store'
-import { get_student_async, select_user_student_list, set_current_edit_userinfo, set_is_show_user_edit_modal } from '@/store/slice/user';
-import { useSelector } from 'react-redux';
+import { Table, Divider } from 'antd';
+import {
+    get_student_async,
+    select_student_list_current_page,
+    select_student_list_search_params,
+    select_user_student_list_data,
+    set_current_edit_userinfo,
+    set_is_show_user_edit_modal,
+    set_student_list_current_page
+} from '@/store/slice/user';
 import { get_subject_tree_async } from '@/store/slice/subject';
 import { userDelete } from '@/utils/request';
+import dayjs from 'dayjs'
+import { useAppSelector, useAppDispatch } from '@/store';
+import { Pagination } from 'antd';
+
+const PAGE_COUNT = 8
 
 const ListTable: React.FC = () => {
     const dispatch = useAppDispatch();
-    const student_list = useSelector(select_user_student_list)
+    const data = useAppSelector(select_user_student_list_data)
+    const search_params = useAppSelector(select_student_list_search_params)
+    const student_list = data.list
+    const count = data.count
+    const current_page = useAppSelector(select_student_list_current_page)
 
     useEffect(() => {
         dispatch(get_subject_tree_async())
-        dispatch(get_student_async())
+        dispatch(get_student_async({}))
     }, [])
 
     async function edit_click(record: any) {
@@ -20,11 +35,24 @@ const ListTable: React.FC = () => {
         dispatch(set_is_show_user_edit_modal(true))
     }
 
-    async function delete_click(record: any) {
+    async function delete_click (record: any) {
         await userDelete(record._id)
-        dispatch(get_student_async())
+        dispatch(get_student_async({
+            ...search_params,
+            skip: (current_page - 1) * PAGE_COUNT,
+            limit: PAGE_COUNT
+        }))
     }
 
+    function page_change(val: any) {
+        dispatch(set_student_list_current_page(val))
+
+        dispatch(get_student_async({
+            ...search_params,
+            skip: (val - 1) * PAGE_COUNT,
+            limit: PAGE_COUNT
+        }))
+    }
     const columns = [
         {
             title: '序号',
@@ -66,12 +94,19 @@ const ListTable: React.FC = () => {
             dataIndex: 'educationBackground',
         },
         {
-            title: '手机号码',
+            title: '号码',
             dataIndex: 'phone',
         },
         {
             title: '课程权限',
             dataIndex: 'role',
+        },
+        {
+            title: '注册时间',
+            dataIndex: 'created',
+            render: (_: any, record: any) => {
+                return <span>{dayjs().format('YYYY MM-DD')}</span>
+            }
         },
         {
             title: '操作',
@@ -98,8 +133,11 @@ const ListTable: React.FC = () => {
     return (
         <>
             <Table
-                dataSource={student_list} columns={columns}
+                dataSource={student_list}
+                columns={columns}
+                pagination={false}
             />
+            <Pagination pageSize={PAGE_COUNT} current={current_page} total={count} onChange={page_change} />
         </>
     );
 };

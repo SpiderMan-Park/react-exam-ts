@@ -1,4 +1,5 @@
 import axios from './http'
+import Search from '@/pages/student_manage/Search';
 
 type AxiosRes<T = ResData> = {
     config: Object,
@@ -13,7 +14,8 @@ type AxiosRes<T = ResData> = {
 export type ResData<T = any> = {
     code: number,
     msg: string,
-    data: T
+    data: T,
+    count?: number
 }
 
 type AxiosResData<T = any> = AxiosRes<ResData<T>>
@@ -146,10 +148,19 @@ export function getMenuRequest() {
 }
 
 // 获取学生列表
-export function getStudentListRequest() {
-    return new Promise<UserInfo[]>(async (resolve, rejects) => {
-        const res: AxiosResData<UserInfo[]> = await axios.get('/api/user/student')
-        resolve(res?.data?.data)
+type StudentSearch = {
+    name?: string,
+    phone?: string,
+    skip?: number,
+    limit?: number
+}
+
+export function getStudentListRequest(params: StudentSearch = {}) {
+    return new Promise<ResData<UserInfo[]>>(async (resolve, rejects) => {
+        const res: AxiosResData<UserInfo[]> = await axios.get('/api/user/student', {
+            params
+        })
+        resolve(res?.data)
     })
 }
 

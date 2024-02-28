@@ -1,12 +1,15 @@
-import Modal from './components/Modal'
-import ListTable from './components/ListTable'
+import ListTable from "./ListTable";
+
+import Modal from './Modal'
+import Search from "./Search";
 
 function StudentManage() {
     return (
-        <>
-            <Modal />
+        <div className="wrap">
+            <Search></Search>
             <ListTable />
-        </>
+            <Modal />
+        </div>
     )
 }
 
